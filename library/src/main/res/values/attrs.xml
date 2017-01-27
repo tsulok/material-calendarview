@@ -41,6 +41,8 @@
         </attr>
 
         <attr name="mcv_showWeekDays" format="boolean" />
+        <attr name="mcv_separatorHeight" format="dimension" />
+        <attr name="mcv_separatorColor" format="color" />
 
         <attr name="mcv_firstDayOfWeek" format="enum">
             <enum name="sunday" value="1" />

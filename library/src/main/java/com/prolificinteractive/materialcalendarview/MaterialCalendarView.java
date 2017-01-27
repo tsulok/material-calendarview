@@ -237,6 +237,8 @@ public class MaterialCalendarView extends ViewGroup {
     private boolean allowClickDaysOutsideCurrentMonth = true;
     private int firstDayOfWeek;
     private boolean weeksShouldShown = true;
+    private float separatorHeight;
+    private int separatorColor;
 
     private State state;
 
@@ -290,6 +292,16 @@ public class MaterialCalendarView extends ViewGroup {
             firstDayOfWeek = a.getInteger(
                     R.styleable.MaterialCalendarView_mcv_firstDayOfWeek,
                     -1
+            );
+
+            separatorHeight = a.getDimension(
+                    R.styleable.MaterialCalendarView_mcv_separatorHeight,
+                    5f
+            );
+
+            separatorColor = a.getColor(
+                    R.styleable.MaterialCalendarView_mcv_separatorColor,
+                    getResources().getColor(R.color.separator_color_default)
             );
 
             weeksShouldShown = a.getBoolean(
@@ -961,6 +973,20 @@ public class MaterialCalendarView extends ViewGroup {
      */
     public void setDayFormatter(DayFormatter formatter) {
         adapter.setDayFormatter(formatter == null ? DayFormatter.DEFAULT : formatter);
+    }
+
+    /**
+     * @return The separator height of the view
+     */
+    public float getSeparatorHeight() {
+        return separatorHeight;
+    }
+
+    /**
+     * @return The specified color for the separator
+     */
+    public int getSeparatorColor() {
+        return separatorColor;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.prolificinteractive.materialcalendarview;
 
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -31,6 +32,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     private final ArrayList<WeekDayView> weekDayViews = new ArrayList<>();
     private final ArrayList<MonthOnDayView> monthOnDayViews = new ArrayList<>();
     private final ArrayList<DecoratorResult> decoratorResults = new ArrayList<>();
+    private final ArrayList<View> separators = new ArrayList<>();
     @ShowOtherDates
     protected int showOtherDates = SHOW_DEFAULTS;
     private MaterialCalendarView mcv;
@@ -61,10 +63,18 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         setClipToPadding(false);
 
         buildMonthView(resetAndGetWorkingCalendar());
+        addSeparatorLine();
         if (shouldShowWeeks) {
             buildWeekDays(resetAndGetWorkingCalendar());
         }
         buildDayViews(dayViews, resetAndGetWorkingCalendar());
+    }
+
+    private void addSeparatorLine() {
+        View separatorLine = new View(getContext());
+        separatorLine.setBackgroundColor(mcv.getSeparatorColor());
+        separators.add(separatorLine);
+        addView(separatorLine);
     }
 
     private void buildMonthView(Calendar calendar) {
@@ -269,6 +279,40 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
 
+            // Calculate separator dimensions
+            if (separators.contains(child)) {
+                int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        specWidthSize,
+                        MeasureSpec.EXACTLY
+                );
+
+                int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        (int) mcv.getSeparatorHeight(),
+                        MeasureSpec.EXACTLY
+                );
+
+                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+
+                continue;
+            }
+
+            // Calculate month dimensions
+            if (monthOnDayViews.contains(child)) {
+                int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        measureTileWidth,
+                        MeasureSpec.EXACTLY
+                );
+
+                int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        measureTileHeight / 2,
+                        MeasureSpec.EXACTLY
+                );
+
+                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+
+                continue;
+            }
+
             int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
                     measureTileWidth,
                     MeasureSpec.EXACTLY
@@ -301,6 +345,8 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         int childTop = 0;
         int childLeft = parentLeft;
 
+        int foundSeparatorsCount = 0;
+
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
 
@@ -311,8 +357,15 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
 
             childLeft += width;
 
+            if (separators.contains(child)) {
+                childTop += height;
+                childLeft = parentLeft;
+                foundSeparatorsCount++;
+                continue;
+            }
+
             //We should warp every so many children
-            if (i % DEFAULT_DAYS_IN_WEEK == (DEFAULT_DAYS_IN_WEEK - 1)) {
+            if ((i - foundSeparatorsCount) % DEFAULT_DAYS_IN_WEEK == (DEFAULT_DAYS_IN_WEEK - 1)) {
                 childLeft = parentLeft;
                 childTop += height;
             }
