@@ -370,6 +370,10 @@ public class MaterialCalendarView extends ViewGroup {
                     R.styleable.MaterialCalendarView_mcv_weekDayTextAppearance,
                     R.style.TextAppearance_MaterialCalendarWidget_WeekDay
             ));
+            setMonthOnDayTextApperance(a.getResourceId(
+                    R.styleable.MaterialCalendarView_mcv_monthOnDayTextAppearance,
+                    R.style.TextAppearance_MaterialCalendarWidget_MonthOnDay
+            ));
             setDateTextAppearance(a.getResourceId(
                     R.styleable.MaterialCalendarView_mcv_dateTextAppearance,
                     R.style.TextAppearance_MaterialCalendarWidget_Date
@@ -403,6 +407,7 @@ public class MaterialCalendarView extends ViewGroup {
             monthView.setSelectionColor(getSelectionColor());
             monthView.setDateTextAppearance(adapter.getDateTextAppearance());
             monthView.setWeekDayTextAppearance(adapter.getWeekDayTextAppearance());
+            monthView.setMonthOnDayTextAppearance(adapter.getMonthOnDayTextAppearance());
             monthView.setShowOtherDates(getShowOtherDates());
             addView(monthView, new LayoutParams(calendarMode.visibleWeeksCount + DAY_NAMES_ROW));
         }
@@ -768,6 +773,13 @@ public class MaterialCalendarView extends ViewGroup {
     }
 
     /**
+     * @param resourceId The text appearance resource id.
+     */
+    public void setMonthOnDayTextApperance(int resourceId) {
+        adapter.setMonthOnDayTextAppearance(resourceId);
+    }
+
+    /**
      * @return the selected day, or null if no selection. If in multiple selection mode, this
      * will return the last selected date
      */
@@ -1077,6 +1089,7 @@ public class MaterialCalendarView extends ViewGroup {
         ss.color = getSelectionColor();
         ss.dateTextAppearance = adapter.getDateTextAppearance();
         ss.weekDayTextAppearance = adapter.getWeekDayTextAppearance();
+        ss.monthOnDayTextAppearance = adapter.getMonthOnDayTextAppearance();
         ss.showOtherDates = getShowOtherDates();
         ss.allowClickDaysOutsideCurrentMonth = allowClickDaysOutsideCurrentMonth();
         ss.minDate = getMinimumDate();
@@ -1150,6 +1163,7 @@ public class MaterialCalendarView extends ViewGroup {
         int color = 0;
         int dateTextAppearance = 0;
         int weekDayTextAppearance = 0;
+        int monthOnDayTextAppearance = 0;
         int showOtherDates = SHOW_DEFAULTS;
         boolean allowClickDaysOutsideCurrentMonth = true;
         CalendarDay minDate = null;
@@ -1176,6 +1190,7 @@ public class MaterialCalendarView extends ViewGroup {
             out.writeInt(color);
             out.writeInt(dateTextAppearance);
             out.writeInt(weekDayTextAppearance);
+            out.writeInt(monthOnDayTextAppearance);
             out.writeInt(showOtherDates);
             out.writeByte((byte) (allowClickDaysOutsideCurrentMonth ? 1 : 0));
             out.writeParcelable(minDate, 0);
@@ -1209,6 +1224,7 @@ public class MaterialCalendarView extends ViewGroup {
             color = in.readInt();
             dateTextAppearance = in.readInt();
             weekDayTextAppearance = in.readInt();
+            monthOnDayTextAppearance = in.readInt();
             showOtherDates = in.readInt();
             allowClickDaysOutsideCurrentMonth = in.readByte() != 0;
             ClassLoader loader = CalendarDay.class.getClassLoader();

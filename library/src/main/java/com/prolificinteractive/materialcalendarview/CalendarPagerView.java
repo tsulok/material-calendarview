@@ -29,6 +29,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     protected static final int DAY_NAMES_ROW = 1;
     private static final Calendar tempWorkingCalendar = CalendarUtils.getInstance();
     private final ArrayList<WeekDayView> weekDayViews = new ArrayList<>();
+    private final ArrayList<MonthOnDayView> monthOnDayViews = new ArrayList<>();
     private final ArrayList<DecoratorResult> decoratorResults = new ArrayList<>();
     @ShowOtherDates
     protected int showOtherDates = SHOW_DEFAULTS;
@@ -77,6 +78,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
                 monthName = null;
             }
             MonthOnDayView monthOnDayView = new MonthOnDayView(getContext(), monthName);
+            monthOnDayViews.add(monthOnDayView);
             addView(monthOnDayView);
             calendar.add(DATE, 1);
         }
@@ -130,6 +132,12 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
             this.decoratorResults.addAll(results);
         }
         invalidateDecorators();
+    }
+
+    public void setMonthOnDayTextAppearance(int taId) {
+        for (MonthOnDayView monthOnDayView : monthOnDayViews) {
+            monthOnDayView.setTextAppearance(getContext(), taId);
+        }
     }
 
     public void setWeekDayTextAppearance(int taId) {

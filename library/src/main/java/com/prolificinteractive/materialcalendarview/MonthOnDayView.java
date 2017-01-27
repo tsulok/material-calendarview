@@ -29,21 +29,6 @@ class MonthOnDayView extends TextView {
             setTextAlignment(TEXT_ALIGNMENT_CENTER);
         }
 
-//        setDayOfWeek(dayOfWeek);
         setText(monthName);
-    }
-
-    public void setWeekDayFormatter(WeekDayFormatter formatter) {
-        this.formatter = formatter == null ? WeekDayFormatter.DEFAULT : formatter;
-        setDayOfWeek(dayOfWeek);
-    }
-
-    public void setDayOfWeek(int dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-        setText(formatter.format(dayOfWeek));
-    }
-
-    public void setDayOfWeek(Calendar calendar) {
-        setDayOfWeek(CalendarUtils.getDayOfWeek(calendar));
     }
 }
