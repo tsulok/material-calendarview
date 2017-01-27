@@ -38,6 +38,9 @@ public class BasicActivityDecorated extends AppCompatActivity implements OnDateS
         setContentView(R.layout.activity_basic);
         ButterKnife.bind(this);
 
+        widget.setArrowColor(getResources().getColor(R.color.sample_accent));
+        widget.setTopbarVisible(false);
+
         widget.setOnDateChangedListener(this);
         widget.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
 

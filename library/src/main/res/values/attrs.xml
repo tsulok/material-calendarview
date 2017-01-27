@@ -39,6 +39,8 @@
             <enum name="match_parent" value="-1" />
         </attr>
 
+        <attr name="mcv_showWeekDays" format="boolean" />
+
         <attr name="mcv_firstDayOfWeek" format="enum">
             <enum name="sunday" value="1" />
             <enum name="monday" value="2" />

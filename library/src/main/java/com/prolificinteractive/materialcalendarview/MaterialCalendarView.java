@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ArrayRes;
+import android.support.annotation.BoolRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -235,6 +236,7 @@ public class MaterialCalendarView extends ViewGroup {
     private int selectionMode = SELECTION_MODE_SINGLE;
     private boolean allowClickDaysOutsideCurrentMonth = true;
     private int firstDayOfWeek;
+    private boolean weeksShouldShown = true;
 
     private State state;
 
@@ -288,6 +290,11 @@ public class MaterialCalendarView extends ViewGroup {
             firstDayOfWeek = a.getInteger(
                     R.styleable.MaterialCalendarView_mcv_firstDayOfWeek,
                     -1
+            );
+
+            weeksShouldShown = a.getBoolean(
+                    R.styleable.MaterialCalendarView_mcv_showWeekDays,
+                    true
             );
 
             titleChanger.setOrientation(
@@ -1076,6 +1083,7 @@ public class MaterialCalendarView extends ViewGroup {
         ss.maxDate = getMaximumDate();
         ss.selectedDates = getSelectedDates();
         ss.firstDayOfWeek = getFirstDayOfWeek();
+        ss.showWeekDays = isWeeksShouldShown();
         ss.orientation = getTitleAnimationOrientation();
         ss.selectionMode = getSelectionMode();
         ss.tileWidthPx = getTileWidth();
@@ -1148,6 +1156,7 @@ public class MaterialCalendarView extends ViewGroup {
         CalendarDay maxDate = null;
         List<CalendarDay> selectedDates = new ArrayList<>();
         int firstDayOfWeek = Calendar.SUNDAY;
+        boolean showWeekDays = true;
         int orientation = 0;
         int tileWidthPx = -1;
         int tileHeightPx = -1;
@@ -1173,6 +1182,7 @@ public class MaterialCalendarView extends ViewGroup {
             out.writeParcelable(maxDate, 0);
             out.writeTypedList(selectedDates);
             out.writeInt(firstDayOfWeek);
+            out.writeSerializable(showWeekDays);
             out.writeInt(orientation);
             out.writeInt(tileWidthPx);
             out.writeInt(tileHeightPx);
@@ -1206,6 +1216,7 @@ public class MaterialCalendarView extends ViewGroup {
             maxDate = in.readParcelable(loader);
             in.readTypedList(selectedDates, CalendarDay.CREATOR);
             firstDayOfWeek = in.readInt();
+            showWeekDays = (boolean) in.readSerializable();
             orientation = in.readInt();
             tileWidthPx = in.readInt();
             tileHeightPx = in.readInt();
@@ -1235,6 +1246,13 @@ public class MaterialCalendarView extends ViewGroup {
      */
     public int getFirstDayOfWeek() {
         return firstDayOfWeek;
+    }
+
+    /**
+     * @return Whether the weeks should be shown
+     */
+    public boolean isWeeksShouldShown() {
+        return weeksShouldShown;
     }
 
     /**

@@ -80,4 +80,8 @@ public class CalendarUtils {
     public static int getDayOfWeek(Calendar calendar) {
         return calendar.get(DAY_OF_WEEK);
     }
+
+    public static boolean isMonthTheCurrent(Calendar calendar, Calendar currentCalendar) {
+        return getMonth(calendar) == getMonth(currentCalendar);
+    }
 }

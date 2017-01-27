@@ -13,6 +13,11 @@ import java.util.Collection;
 @SuppressLint("ViewConstructor")
 class MonthView extends CalendarPagerView {
 
+    public MonthView(@NonNull MaterialCalendarView view, CalendarDay month, int firstDayOfWeek,
+                     boolean shouldShowWeeks) {
+        super(view, month, firstDayOfWeek, shouldShowWeeks);
+    }
+
     public MonthView(@NonNull MaterialCalendarView view, CalendarDay month, int firstDayOfWeek) {
         super(view, month, firstDayOfWeek);
     }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.SHOW_DEFAULTS;
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.showOtherMonths;
@@ -36,12 +37,20 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     private CalendarDay minDate = null;
     private CalendarDay maxDate = null;
     private int firstDayOfWeek;
+    private boolean isFirstMonthShowed = false;
 
     private final Collection<DayView> dayViews = new ArrayList<>();
 
     public CalendarPagerView(@NonNull MaterialCalendarView view,
                              CalendarDay firstViewDay,
                              int firstDayOfWeek) {
+        this(view, firstViewDay, firstDayOfWeek, true);
+    }
+
+    public CalendarPagerView(@NonNull MaterialCalendarView view,
+                             CalendarDay firstViewDay,
+                             int firstDayOfWeek,
+                             boolean shouldShowWeeks) {
         super(view.getContext());
         this.mcv = view;
         this.firstViewDay = firstViewDay;
@@ -50,8 +59,27 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         setClipChildren(false);
         setClipToPadding(false);
 
-        buildWeekDays(resetAndGetWorkingCalendar());
+        buildMonthView(resetAndGetWorkingCalendar());
+        if (shouldShowWeeks) {
+            buildWeekDays(resetAndGetWorkingCalendar());
+        }
         buildDayViews(dayViews, resetAndGetWorkingCalendar());
+    }
+
+    private void buildMonthView(Calendar calendar) {
+        final Calendar currentCalendar = firstViewDay.getCalendar();
+        for (int i = 0; i < DEFAULT_DAYS_IN_WEEK; i++) {
+            final String monthName;
+            if (!isFirstMonthShowed && CalendarUtils.isMonthTheCurrent(calendar, currentCalendar)) {
+                monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+                isFirstMonthShowed = true;
+            } else {
+                monthName = null;
+            }
+            MonthOnDayView monthOnDayView = new MonthOnDayView(getContext(), monthName);
+            addView(monthOnDayView);
+            calendar.add(DATE, 1);
+        }
     }
 
     private void buildWeekDays(Calendar calendar) {
